@@ -1,0 +1,45 @@
+WORDS=/usr/share/dict/words
+WORD_COUNT=$(wc -l ${WORDS} | awk '{print $1}')
+
+if [ -z ${MY_SCRATCH_DIR+x} ]; then
+    echo "env $MY_SCRATCH_DIR is not set"
+    exit
+fi
+
+function randIndex {
+        index=${RANDOM}
+        let "index %= ${WORD_COUNT}"
+}
+
+function buildDirName {
+    dir_name=""
+    while true; do
+
+        randIndex
+        word1=$(sed "${index}q;d" ${WORDS})
+        randIndex
+        word2=$(sed "${index}q;d" ${WORDS})
+        
+        dir_name="${word1}_${word2}"
+        dir_name=$(echo "$dir_name" | tr '[:upper:]' '[:lower:]')
+        scratch_dir="${MY_SCRATCH_DIR}/${dir_name}"
+
+        if [ ! -e ${dir_name} ]; then
+            break
+        fi
+    done
+}
+
+function _scratchDir {
+    buildDirName
+    mkdir -p ${scratch_dir} && pushd ${scratch_dir}
+    echo $(date)>README.md
+    git init && git add README.md && git commit -m "initial commit" -a
+    export LAST_SCRATCH_DIR=${new_scratch_dir}
+}
+
+alias scratch=_scratchDir
+
+
+
+
