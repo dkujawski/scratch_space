@@ -3,7 +3,7 @@ WORD_COUNT=$(wc -l ${WORDS} | awk '{print $1}')
 
 if [ -z ${MY_SCRATCH_DIR+x} ]; then
     echo "env $MY_SCRATCH_DIR is not set"
-    exit
+    export MY_SCRATCH_DIR=~
 fi
 
 function randIndex {
