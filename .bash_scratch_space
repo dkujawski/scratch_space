@@ -7,8 +7,7 @@ if [ -z ${MY_SCRATCH_DIR+x} ]; then
 fi
 
 function randIndex {
-        index=${RANDOM}
-        let "index %= ${WORD_COUNT}"
+    index=$(shuf -i 1-$WORD_COUNT -n 1)
 }
 
 function buildDirName {
